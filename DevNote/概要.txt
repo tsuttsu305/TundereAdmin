@@ -1,0 +1,3 @@
+–¼Ì: TundereAdminPlugin
+ŠJ”­Ò: tsuttsu305 (MCTundereServerAdmin)
+main: jp.mydns.tundere.TundereAdmin

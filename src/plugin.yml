@@ -1,0 +1,16 @@
+name: TundereAdmin
+main: jp.mydns.tundere.TundereAdmin
+version: 0.0.1
+commands:
+  tundereadmin:
+    description: helpCmd
+    permission: tundere.help
+    usage: /tundereadmin
+  msg:
+    description: MsgCmd
+    permission: tundere.msg
+    usage: /msg
+  warp:
+    description: WarpCmd
+    permission: tundere.warp
+    usage: /warp

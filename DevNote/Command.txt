@@ -1,0 +1,23 @@
+・tundereadmin [各種引数]
+	すべての処理の案内とか。
+	
+・afk [Msg]
+	離席中コマンド
+	
+・spawn [set]
+	リスポ帰還用
+	spawn setも実装
+	
+・warp <ToLocName>
+	事前に設定したポイントへワープするためのコマンド
+	
+・spawnblock <stop|chk|start>
+	スポブロ規制用
+	自動制圧判定　空間照度判定
+	
+・msg [Player] <Msg>
+	要するにDM的な
+	[Player]省略時はconfigで設定したGroupへ送信を行う
+	
+・tundereworld [各種引数]
+	MultiWorld系

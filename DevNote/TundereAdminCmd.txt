@@ -1,0 +1,6 @@
+Command: /tundereadmin
+Alias: /tadmin
+
+PermissionNode:
+	tundere.admin: root
+		tundere.admin.help: help
