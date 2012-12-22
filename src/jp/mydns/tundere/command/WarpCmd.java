@@ -28,11 +28,12 @@ public class WarpCmd {
 	private final String toPerm = "to";
 	private final String listPerm = "list";
 	private final String rmPerm = "remove";
+	private final String reloadPrem = "reload";
 	/*PermissionNodeここまで*/
 
 	public void cmdRun(){
 		if (args.length < 1){
-			sender.sendMessage("[TundereAdnim] /warp [set|to|list|remove]");
+			sender.sendMessage(ChatColor.GOLD + "[TundereAdnim] /warp [set|to|list|remove]");
 			return;
 		}
 		//Player以外は処理し…します。　まず第1引数が{set, to, list, remove}かどうかを判定する
@@ -51,7 +52,7 @@ public class WarpCmd {
 			
 		}else if (args[0].equalsIgnoreCase("to")){
 			if (chkPerm(rootPerm  + toPerm) == false) return; 
-
+			
 			
 		}else if(args[0].equalsIgnoreCase("list")){
 			if (chkPerm(rootPerm  + listPerm) == false) return; 
@@ -61,6 +62,10 @@ public class WarpCmd {
 			if (chkPerm(rootPerm  + rmPerm) == false) return; 
 
 			
+		}else if(args[0].equalsIgnoreCase("reload")){
+			if (chkPerm(rootPerm  + reloadPrem) == false) return; 
+			plugin.getWarpLocConfig().loadConfig();
+			sender.sendMessage(ChatColor.GREEN + "[TundereAdmin] Warp Config Reload SUCCESS!");
 		}else{
 
 		}
@@ -95,6 +100,16 @@ public class WarpCmd {
 		plugin.getWarpLocConfig().getConfig().set(locName + ".y", y);
 		plugin.getWarpLocConfig().getConfig().set(locName + ".z", z);
 		plugin.getWarpLocConfig().saveConfig();
+		
+		pl.sendMessage(ChatColor.GREEN + "[TundereAdmin] 保存しました! " + locName + ": " + x + ", " + y + ", " + z);
+	}
+	
+	public void doWarp(String locKey){
+		int x, y, z;
+		x = plugin.getWarpLocConfig().getConfig().getInt(locKey + ".x");
+		y = plugin.getWarpLocConfig().getConfig().getInt(locKey + ".y");
+		z = plugin.getWarpLocConfig().getConfig().getInt(locKey + ".z");
+		//TODO: なんかいいFont探し
 	}
 }
 
