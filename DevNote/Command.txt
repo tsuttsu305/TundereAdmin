@@ -21,3 +21,7 @@
 	
 ・tundereworld [各種引数]
 	MultiWorld系
+	
+・item [各種]
+	Item操作系
+	持っているもののクローン。耐久値の操作, エンチャント

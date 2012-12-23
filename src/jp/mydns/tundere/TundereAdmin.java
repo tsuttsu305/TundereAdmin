@@ -1,3 +1,6 @@
+/*
+ * クリスマスとか滅びろ!!!!!
+ */
 package jp.mydns.tundere;
 
 import java.util.logging.Logger;
@@ -11,6 +14,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * 
+ * @author tsuttsu305
+ *
+ */
 public class TundereAdmin extends JavaPlugin {
 	public static TundereAdmin plugin;
 	Logger logger = Logger.getLogger("Minecraft");
