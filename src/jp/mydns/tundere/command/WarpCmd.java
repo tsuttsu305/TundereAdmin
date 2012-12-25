@@ -41,7 +41,7 @@ public class WarpCmd {
 	
 	public void cmdRun(){
 		if (args.length < 1){
-			sender.sendMessage(ChatColor.GOLD + "[TundereAdnim] /warp [set|to|list|remove]");
+			sender.sendMessage(ChatColor.GOLD + "[TundereAdnim] /warp [set | to | list | remove]");
 			return;
 		}
 		//Player以外は処理し…します。　まず第1引数が{set, to, list, remove}かどうかを判定する
@@ -87,6 +87,11 @@ public class WarpCmd {
 			
 		}else if(args[0].equalsIgnoreCase("remove")){
 			if (chkPerm(rootPerm  + rmPerm) == false) return; 
+			if (args.length == 2){
+				rmWarpPoint(args[1], sender);
+			}else{
+				((Player)sender).sendMessage(ChatColor.RED + "[TundereAdmin] 引数が異常です!");
+			}
 			
 			
 		}else if(args[0].equalsIgnoreCase("reload")){
@@ -96,7 +101,22 @@ public class WarpCmd {
 			
 			
 		}else{
-			
+			if (getWarpConfig().isConfigurationSection(args[0])){
+				if (chkPerm(rootPerm  + toPerm) == false) return; 
+				if (sender instanceof Player){
+					
+					if (args.length == 1){
+						doWarp(args[0], (Player)sender);
+					}else{
+						((Player)sender).sendMessage(ChatColor.RED + "[TundereAdmin] 引数が異常です!");
+					}
+					
+				}else{
+					sender.sendMessage("[TundereAdmin] このコマンドはPlayer専用です。");
+				}
+			}else{
+				sender.sendMessage(ChatColor.GOLD + "[TundereAdnim] /warp [set | to | list | remove]");
+			}
 		}
 	}
 	
@@ -106,7 +126,18 @@ public class WarpCmd {
 	 * @param sender :CommandSender
 	 */
 	public void rmWarpPoint(String locKey, CommandSender sender){
+		//場所が登録されているかどうか取得　ない場合はErrorを返す
+		if (!getWarpConfig().isConfigurationSection(locKey)){
+			sender.sendMessage(ChatColor.RED + "[TundereAdmin] その場所は登録されていません。");
+			return;
+		}
 		
+		//削除
+		getWarpConfig().set(locKey, null);
+		plugin.getWarpLocConfig().saveConfig();
+		
+		//完了メッセージ
+		sender.sendMessage(ChatColor.GREEN + "[TundereAdmin] WarpPoint:" + ChatColor.GOLD + locKey + ChatColor.GREEN + "を削除しました");
 	}
 	
 	/**
