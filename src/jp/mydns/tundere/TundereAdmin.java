@@ -1,6 +1,3 @@
-/*
- * クリスマスとか滅びろ!!!!!
- */
 package jp.mydns.tundere;
 
 import java.util.logging.Logger;

@@ -83,7 +83,7 @@ public class WarpCmd {
 			}else{
 				sender.sendMessage(ChatColor.RED + "[TundereAdmin] 引数が異常です。");
 			}
-				
+			
 			
 		}else if(args[0].equalsIgnoreCase("remove")){
 			if (chkPerm(rootPerm  + rmPerm) == false) return; 
@@ -101,6 +101,15 @@ public class WarpCmd {
 	}
 	
 	/**
+	 * 登録されたWarpPoint消去
+	 * @param locKey :WarpPointName
+	 * @param sender :CommandSender
+	 */
+	public void rmWarpPoint(String locKey, CommandSender sender){
+		
+	}
+	
+	/**
 	 *Warpポイントのリストを表示させる
 	 *@param args :番号
 	 *@param sender :Sender
@@ -112,7 +121,6 @@ public class WarpCmd {
 		try {
 			page = Integer.parseInt(arg);
 		} catch (NumberFormatException e) {
-			// TODO 自動生成された catch ブロック
 			sender.sendMessage(ChatColor.RED + "[TundereAdmin] 引数が異常です。");
 			return;
 		}
