@@ -1,5 +1,7 @@
 package jp.mydns.tundere.command;
 
+import java.util.Set;
+
 import jp.mydns.tundere.TundereAdmin;
 
 import org.bukkit.ChatColor;
@@ -30,11 +32,11 @@ public class WarpCmd {
 	
 	/*PermissionNodeここから*/
 	private final String rootPerm = "tundere.warp";
-	private final String setPerm = "set";
-	private final String toPerm = "to";
-	private final String listPerm = "list";
-	private final String rmPerm = "remove";
-	private final String reloadPrem = "reload";
+	private final String setPerm = ".set";
+	private final String toPerm = ".to";
+	private final String listPerm = ".list";
+	private final String rmPerm = ".remove";
+	private final String reloadPrem = ".reload";
 	/*PermissionNodeここまで*/
 	
 	public void cmdRun(){
@@ -56,21 +58,32 @@ public class WarpCmd {
 				sender.sendMessage("[TundereAdmin] このコマンドはPlayer専用です。");
 			}
 			
+			
 		}else if (args[0].equalsIgnoreCase("to")){
 			if (chkPerm(rootPerm  + toPerm) == false) return; 
 			if (sender instanceof Player){
+				
 				if (args.length == 2){
 					doWarp(args[1], (Player)sender);
 				}else{
 					((Player)sender).sendMessage(ChatColor.RED + "[TundereAdmin] 引数が異常です!");
 				}
+				
 			}else{
 				sender.sendMessage("[TundereAdmin] このコマンドはPlayer専用です。");
 			}
 			
-		}else if(args[0].equalsIgnoreCase("list")){
-			if (chkPerm(rootPerm  + listPerm) == false) return; 
 			
+		}else if(args[0].equalsIgnoreCase("list")){
+			if (chkPerm(rootPerm  + listPerm) == false) return;
+			if (args.length == 1){
+				warpList("1", sender);
+			}else if (args.length == 2){
+				warpList(args[1], sender);
+			}else{
+				sender.sendMessage(ChatColor.RED + "[TundereAdmin] 引数が異常です。");
+			}
+				
 			
 		}else if(args[0].equalsIgnoreCase("remove")){
 			if (chkPerm(rootPerm  + rmPerm) == false) return; 
@@ -80,16 +93,82 @@ public class WarpCmd {
 			if (chkPerm(rootPerm  + reloadPrem) == false) return; 
 			plugin.getWarpLocConfig().loadConfig();
 			sender.sendMessage(ChatColor.GREEN + "[TundereAdmin] Warp Config Reload SUCCESS!");
+			
+			
 		}else{
 			
 		}
 	}
 	
+	/**
+	 *Warpポイントのリストを表示させる
+	 *@param args :番号
+	 *@param sender :Sender
+	 */
+	public void warpList(String arg, CommandSender sender){
+		Set<String> setlist = getWarpConfig().getKeys(false);
+		String[] list = (String[]) setlist.toArray(new String[0]);
+		int page;
+		try {
+			page = Integer.parseInt(arg);
+		} catch (NumberFormatException e) {
+			// TODO 自動生成された catch ブロック
+			sender.sendMessage(ChatColor.RED + "[TundereAdmin] 引数が異常です。");
+			return;
+		}
+		
+		//pageが負or0の場合は拒否
+		if (page < 1){
+			sender.sendMessage(ChatColor.RED + "[TundereAdmin] ページは1以上の値を入力してください。");
+			return;
+		}
+		
+		
+		//項目数取得
+		int index = list.length;
+		//総ページ数取得。1ページあたり5つのpoint
+		int maxPage;
+		if (index % 5 == 0){
+			maxPage = index / 5;
+		}else{
+			maxPage = (index - (index % 5)) /5 + 1;
+		}
+		
+		//最大ページ超えてないかCheck
+		if (page > maxPage){
+			sender.sendMessage(ChatColor.RED + "[TundereAdmin] Listの最大ページを超えています!");
+			return;
+		}
+		
+		//表示開始位置取得(配列用名ので0スタート)
+		int start = page * 5 - 5;
+		
+		
+		//表示
+		sender.sendMessage(ChatColor.GREEN + "[TundereAdmin] WarpPointList(" + page + "/" + maxPage + ")");
+		for (int i = 0;i <=4; i++ ){
+			//最終ページで存在しないものが出た場合
+			if (list.length - 1 < i + start){
+				break;
+			}
+			int show = i+1;
+			String key = list[start + i];
+			String pointName = key;
+			String xyz = getWarpConfig().getInt(key + ".x") + ", " + getWarpConfig().getInt(key + ".y") + ", " + getWarpConfig().getInt(key + ".z");
+			String worldName = getWarpConfig().getString(key + ".world");
+			
+			sender.sendMessage(ChatColor.GREEN + "" +  show + ". " + ChatColor.GOLD +  pointName + ChatColor.AQUA + ":" + xyz + " - " + worldName);
+		}
+		
+	}
+	
 	
 	/**
 	 * 権限ないよm9用処理
+	 * @param perm PermissionNode
 	 */
 	public boolean chkPerm(String perm){
+		
 		if (!(sender instanceof Player)){
 			return true;
 		}
@@ -137,6 +216,7 @@ public class WarpCmd {
 		if (!getWarpConfig().isInt(locKey + ".x") || 
 				!getWarpConfig().isInt(locKey + ".y") || !getWarpConfig().isInt(locKey + ".z") || 
 				!getWarpConfig().isString(locKey + ".world")){
+			
 			player.sendMessage(ChatColor.RED + "[TundereAdmin] 設定ファイルに異常があります。");
 			return;
 		}
