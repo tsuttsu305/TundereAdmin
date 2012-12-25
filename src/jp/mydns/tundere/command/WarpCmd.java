@@ -151,7 +151,7 @@ public class WarpCmd {
 			if (list.length - 1 < i + start){
 				break;
 			}
-			int show = i+1;
+			int show = start + i + 1;
 			String key = list[start + i];
 			String pointName = key;
 			String xyz = getWarpConfig().getInt(key + ".x") + ", " + getWarpConfig().getInt(key + ".y") + ", " + getWarpConfig().getInt(key + ".z");
