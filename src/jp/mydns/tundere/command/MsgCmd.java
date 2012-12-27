@@ -22,7 +22,7 @@ public class MsgCmd {
 	/*こんすとらくたぁ～ここまで*/
 
 	/*PermissionNodeここから*/
-	private final String rootPerm = "tundereadmin.msg";
+	private final String rootPerm = "tundere.msg";
 	/*PermissionNodeここまで*/
 
 	public void cmdRun(){

@@ -1,7 +1,10 @@
 package jp.mydns.tundere;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
+import jp.mydns.tundere.Listener.AFKListener;
+import jp.mydns.tundere.command.AfkCmd;
 import jp.mydns.tundere.command.MsgCmd;
 import jp.mydns.tundere.command.TundereAdminCmd;
 import jp.mydns.tundere.command.WarpCmd;
@@ -9,6 +12,7 @@ import jp.mydns.tundere.config.WarpLocList;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -22,14 +26,18 @@ public class TundereAdmin extends JavaPlugin {
 	
 	//config
 	private WarpLocList warpLoc;
+	private HashMap<Player, Boolean> afkStatus = new HashMap<Player, Boolean>();
+	
 	
 	@Override
 	public void onEnable(){
-		eventRegister();
+		eventRegister();//イベント登録
 		
 		//config
 		warpLoc = new WarpLocList(this, "warpLoclist.yml");
 		warpLoc.loadConfig();
+		logger.info("[TundereAdmin] Load warpLocList.yml");
+		resetAfkStatus();
 	}
 	
 	@Override
@@ -41,7 +49,7 @@ public class TundereAdmin extends JavaPlugin {
 	 * イベント登録用メソッド
 	 */
 	private void eventRegister(){
-		
+		getServer().getPluginManager().registerEvents(new AFKListener(this), this);
 	}
 	
 	
@@ -52,7 +60,9 @@ public class TundereAdmin extends JavaPlugin {
 			ta.cmdRun();
 			return true;
 		}else if (cmd.getName().equalsIgnoreCase("afk")){
-			
+			AfkCmd ac = new AfkCmd(this, sender, cmd, label, args);
+			ac.cmdRun();
+			return true;
 		}else if (cmd.getName().equalsIgnoreCase("spawn")){
 			
 		}else if (cmd.getName().equalsIgnoreCase("warp")){
@@ -70,9 +80,30 @@ public class TundereAdmin extends JavaPlugin {
 		}
 		return false;
 	}
-
+	
+	
+	/**
+	 * 
+	 * @return WarpLocList()
+	 */
 	public WarpLocList getWarpLocConfig() {
 		return warpLoc;
 	}
 	
+	
+	/**
+	 * 
+	 * @return AFK Status HashMap
+	 */
+	public HashMap<Player, Boolean> getAfkStatusMap(){
+		return afkStatus;
+	}
+	
+	private void resetAfkStatus(){
+		Player[] players = getServer().getOnlinePlayers();
+		
+		for (int i = 0;i<players.length;i++){
+			getAfkStatusMap().put(players[i], false);
+		}
+	}
 }
