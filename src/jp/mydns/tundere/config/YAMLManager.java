@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import jp.mydns.tundere.TundereAdmin;
 
-public class WarpLocList {
+public class YAMLManager {
 	private TundereAdmin plugin;
 
 	//config関係
@@ -24,7 +24,7 @@ public class WarpLocList {
 	 * @param plugins JavaPlugin
 	 * @param configName ロードするConfigの名前
 	 */
-	public WarpLocList(TundereAdmin plugins, String configName) {
+	public YAMLManager(TundereAdmin plugins, String configName) {
 		this.plugin = plugins;
 		this.confName = configName;
 		//configのパスを取得

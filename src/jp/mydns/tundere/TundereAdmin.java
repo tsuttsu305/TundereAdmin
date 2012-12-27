@@ -4,11 +4,12 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 import jp.mydns.tundere.Listener.AFKListener;
+import jp.mydns.tundere.Listener.SpawnerListener;
 import jp.mydns.tundere.command.AfkCmd;
 import jp.mydns.tundere.command.MsgCmd;
 import jp.mydns.tundere.command.TundereAdminCmd;
 import jp.mydns.tundere.command.WarpCmd;
-import jp.mydns.tundere.config.WarpLocList;
+import jp.mydns.tundere.config.YAMLManager;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -25,7 +26,7 @@ public class TundereAdmin extends JavaPlugin {
 	Logger logger = Logger.getLogger("Minecraft");
 	
 	//config
-	private WarpLocList warpLoc;
+	private YAMLManager warpLoc, spawnerloc;
 	private HashMap<Player, Boolean> afkStatus = new HashMap<Player, Boolean>();
 	
 	
@@ -33,10 +34,16 @@ public class TundereAdmin extends JavaPlugin {
 	public void onEnable(){
 		eventRegister();//イベント登録
 		
-		//config
-		warpLoc = new WarpLocList(this, "warpLoclist.yml");
+		//configLoad
+		//warpList
+		warpLoc = new YAMLManager(this, "warpLoclist.yml");
 		warpLoc.loadConfig();
 		logger.info("[TundereAdmin] Load warpLocList.yml");
+		//SpawnerList
+		spawnerloc = new YAMLManager(this, "spawnerlist.yml");
+		spawnerloc.loadConfig();
+		logger.info("[TundereAdmin] Load spawnerlist.yml");
+		
 		resetAfkStatus();
 	}
 	
@@ -50,6 +57,7 @@ public class TundereAdmin extends JavaPlugin {
 	 */
 	private void eventRegister(){
 		getServer().getPluginManager().registerEvents(new AFKListener(this), this);
+		getServer().getPluginManager().registerEvents(new SpawnerListener(this), this);
 	}
 	
 	
@@ -84,12 +92,20 @@ public class TundereAdmin extends JavaPlugin {
 	
 	/**
 	 * 
-	 * @return WarpLocList()
+	 * @return Warp Point List Config
 	 */
-	public WarpLocList getWarpLocConfig() {
+	public YAMLManager getWarpLocConfig() {
 		return warpLoc;
 	}
 	
+	
+	/**
+	 * 
+	 * @return Spawner Location List Config
+	 */
+	public YAMLManager getSpawnerListConfig(){
+		return spawnerloc;
+	}
 	
 	/**
 	 * 
