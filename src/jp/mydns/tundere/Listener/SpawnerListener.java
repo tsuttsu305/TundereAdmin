@@ -94,6 +94,7 @@ public class SpawnerListener implements Listener{
 			getConfig().set(locStr + ".x", loc.getBlockX());
 			getConfig().set(locStr + ".y", loc.getBlockY());
 			getConfig().set(locStr + ".z", loc.getBlockZ());
+			getConfig().set(locStr + ".name", "none");
 			getConfig().set(locStr + ".owner", "none");
 			getConfig().set(locStr + ".stop", false);
 			getConfig().set(locStr + ".flag.secret", false);
