@@ -7,6 +7,7 @@ import jp.mydns.tundere.Listener.AFKListener;
 import jp.mydns.tundere.Listener.SpawnerListener;
 import jp.mydns.tundere.command.AfkCmd;
 import jp.mydns.tundere.command.MsgCmd;
+import jp.mydns.tundere.command.SpawnerCmd;
 import jp.mydns.tundere.command.TundereAdminCmd;
 import jp.mydns.tundere.command.WarpCmd;
 import jp.mydns.tundere.config.YAMLManager;
@@ -28,6 +29,7 @@ public class TundereAdmin extends JavaPlugin {
 	//config
 	private YAMLManager warpLoc, spawnerloc;
 	private HashMap<Player, Boolean> afkStatus = new HashMap<Player, Boolean>();
+	private HashMap<Player, Boolean> spawnerRegFlag = new HashMap<Player, Boolean>();
 	
 	
 	@Override
@@ -44,7 +46,7 @@ public class TundereAdmin extends JavaPlugin {
 		spawnerloc.loadConfig();
 		logger.info("[TundereAdmin] Load spawnerlist.yml");
 		
-		resetAfkStatus();
+		tempMapsReset();
 	}
 	
 	@Override
@@ -77,8 +79,10 @@ public class TundereAdmin extends JavaPlugin {
 			WarpCmd wc = new WarpCmd(this, sender, cmd, label, args);
 			wc.cmdRun();
 			return true;
-		}else if (cmd.getName().equalsIgnoreCase("spawnblock")){//alias: spb
-			
+		}else if (cmd.getName().equalsIgnoreCase("spawner")){//alias: spb
+			SpawnerCmd sc = new SpawnerCmd(this, sender, cmd, label, args);
+			sc.cmdRun();
+			return true;
 		}else if (cmd.getName().equalsIgnoreCase("msg")){
 			MsgCmd mc = new MsgCmd(this, sender, cmd, label, args);
 			mc.cmdRun();
@@ -115,11 +119,20 @@ public class TundereAdmin extends JavaPlugin {
 		return afkStatus;
 	}
 	
-	private void resetAfkStatus(){
+	/**
+	 * 
+	 * @return Spaawner Can Regist Flag
+	 */
+	public HashMap<Player, Boolean> getspawnerFlagMap(){
+		return spawnerRegFlag;
+	}
+	
+	private void tempMapsReset(){
 		Player[] players = getServer().getOnlinePlayers();
 		
 		for (int i = 0;i<players.length;i++){
 			getAfkStatusMap().put(players[i], false);
+			getspawnerFlagMap().put(players[i], false);
 		}
 	}
 }

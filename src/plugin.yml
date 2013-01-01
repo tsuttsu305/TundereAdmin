@@ -1,4 +1,7 @@
 name: TundereAdmin
+author: tsuttsu305
+description: TundereServer Administration Plugin
+website: http://info.tundere.mydns.jp/
 main: jp.mydns.tundere.TundereAdmin
 version: 0.0.1
 commands:
@@ -18,3 +21,8 @@ commands:
     description: AFKCmd
     permission: tundere.afk
     usage: /afk
+  spawner:
+    aliases: [spb]
+    description: SpawnerCmd
+    permission: tundere.spanwer
+    usage: /spawner

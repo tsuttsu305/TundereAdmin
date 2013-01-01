@@ -11,9 +11,9 @@
 ・warp <ToLocName>
 	事前に設定したポイントへワープするためのコマンド
 	
-・spawnblock <stop|chk|start>
+・spawner <stop|reg|start>
 	スポブロ規制用
-	自動制圧判定　空間照度判定
+	空間照度判定
 	
 ・msg [Player] <Msg>
 	要するにDM的な

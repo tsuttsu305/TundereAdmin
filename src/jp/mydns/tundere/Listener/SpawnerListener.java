@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.player.PlayerJoinEvent;
 /**
  * 
  * @author tsuttsu305 (SpawnerListener.java)
@@ -69,6 +70,15 @@ public class SpawnerListener implements Listener{
 		}
 	}
 	
+	/**
+	 * Player Join Flag Reset 
+	 * @param event
+	 */
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJoin(PlayerJoinEvent event){
+		plugin.getspawnerFlagMap().put(event.getPlayer(), false);
+	}
+	
 	
 	/**
 	 * スポナー位置記録<br>
@@ -84,7 +94,9 @@ public class SpawnerListener implements Listener{
 			getConfig().set(locStr + ".x", loc.getBlockX());
 			getConfig().set(locStr + ".y", loc.getBlockY());
 			getConfig().set(locStr + ".z", loc.getBlockZ());
+			getConfig().set(locStr + ".owner", "none");
 			getConfig().set(locStr + ".stop", false);
+			getConfig().set(locStr + ".flag.secret", false);
 			plugin.getSpawnerListConfig().saveConfig();
 		}else{
 			if (getConfig().getInt(locStr + ".x") != loc.getBlockX() || 
