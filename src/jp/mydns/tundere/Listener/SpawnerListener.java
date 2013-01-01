@@ -47,22 +47,32 @@ public class SpawnerListener implements Listener{
 			}
 		}
 		
+		
 		//もし見つけられなかった場合
 		if (spawner == null){
 			plugin.getLogger().info("[TundereAdmin] スポナーからMobが出現しましたが、スポナーの位置を特定出来ません。"
-							+ event.getLocation().getBlockX() + ", "
-							+ event.getLocation().getBlockY() + ", "
-							+ event.getLocation().getBlockZ());
+					+ event.getLocation().getBlockX() + ", "
+					+ event.getLocation().getBlockY() + ", "
+					+ event.getLocation().getBlockZ());
 			return;
 		}
 		
 		//Configに記録
 		setSPBList(spawner);
+		
+		//Stopフラグがtrueの場合はcancel
+		Location loc = spawner.getLocation();
+		int x1 = loc.getBlockX(), y1 = loc.getBlockY(), z1 = loc.getBlockZ();
+		String locStr =loc.getWorld().getName() + "." +  x1 + "," + y1 + "," + z1;
+		if (getConfig().getBoolean(locStr + ".stop")){
+			event.setCancelled(true);
+		}
 	}
 	
 	
 	/**
-	 * スポナー位置記録
+	 * スポナー位置記録<br>
+	 * 存在しない場合と位置が違う場合のみ書き込みを行う
 	 * @param block Spawner
 	 */
 	public void setSPBList(Block block){
@@ -71,13 +81,26 @@ public class SpawnerListener implements Listener{
 		String locStr =loc.getWorld().getName() + "." +  x + "," + y + "," + z;
 		if (!getConfig().isConfigurationSection(locStr)){
 			getConfig().createSection(locStr);
+			getConfig().set(locStr + ".x", loc.getBlockX());
+			getConfig().set(locStr + ".y", loc.getBlockY());
+			getConfig().set(locStr + ".z", loc.getBlockZ());
+			getConfig().set(locStr + ".stop", false);
+			plugin.getSpawnerListConfig().saveConfig();
+		}else{
+			if (getConfig().getInt(locStr + ".x") != loc.getBlockX() || 
+					getConfig().getInt(locStr + ".y") != loc.getBlockY() || 
+					getConfig().getInt(locStr + ".z") != loc.getBlockZ()){
+				
+				getConfig().set(locStr + ".x", loc.getBlockX());
+				getConfig().set(locStr + ".y", loc.getBlockY());
+				getConfig().set(locStr + ".z", loc.getBlockZ());
+				plugin.getSpawnerListConfig().saveConfig();
+			}
 		}
 		
-		getConfig().set(locStr + ".x", loc.getBlockX());
-		getConfig().set(locStr + ".y", loc.getBlockY());
-		getConfig().set(locStr + ".z", loc.getBlockZ());
-		plugin.getSpawnerListConfig().saveConfig();
+		
 	}
+	
 	
 	/**
 	 * 
@@ -94,4 +117,5 @@ public class SpawnerListener implements Listener{
  * y +-1
  * 
  * Player 半径 15.5
+ * ライトレベル7
  */
