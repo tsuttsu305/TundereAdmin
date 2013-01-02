@@ -41,7 +41,7 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <!-- Bukkit API Version, change if nessesary -->
-            <version>1.4.6-R0.1-SNAPSHOT</version>
+            <version>1.4.6-R0.3</version>
         </dependency>
       </dependencies>
   <url>http://info.tundere.mydns.jp/</url>
