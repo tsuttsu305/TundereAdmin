@@ -1,12 +1,11 @@
 package jp.mydns.tundere.command;
 
 import java.util.HashMap;
-
 import jp.mydns.tundere.TundereAdmin;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 /**
  * 
@@ -42,7 +41,38 @@ public class SpawnerCmd {
 		
 		if (args[0].equalsIgnoreCase("reg")){
 			if (chkPerm(rootPerm + regPerm) == false) return;
+			//Player以外は弾く
+			if (!(sender instanceof Player)){
+				sender.sendMessage("[TundereAdmin] Player専用です。");
+				return;
+			}
+			
 			if (args.length == 2){
+				String pointName = args[1];
+				Player player = (Player)sender;
+				//すでに使われてないかCheck
+				if (isUsePointName(pointName) == false){
+					player.sendMessage(ChatColor.RED + "[TundereAdmin] その名前はすでに使われています!");
+					return;
+				}
+				
+				if (getFlag().get(player) == null){
+					getFlag().put(player, false);
+				}
+				
+				//30秒でフラグを戻す
+				getFlag().put(player, true);
+				player.sendMessage(ChatColor.GREEN + "[TundereAdmin] 30秒以内に登録するスポナーを素手で右クリックしてください");
+				
+				
+				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+					public void run() {
+						if (getFlag().get((Player)sender) == true){
+							getFlag().put((Player)sender, false);
+							((Player)sender).sendMessage(ChatColor.DARK_GREEN + "[TundereAdmin] スポナー登録処理をキャンセルしました。");
+						}
+					}
+				}, 20L*30L);
 				
 			}
 			
@@ -77,4 +107,27 @@ public class SpawnerCmd {
 		return plugin.getspawnerFlagMap();
 	}
 	
+	/**
+	 * 
+	 * @return Spawner Point List Config
+	 */
+	private FileConfiguration getConfig(){
+		return plugin.getSpawnerListConfig().getConfig();
+	}
+	
+	/**
+	 * そのPointNameが使用されているかどうか確認する
+	 * @param name 使用されているか確認する名前
+	 * @return true = 使用済み
+	 */
+	public boolean isUsePointName(String name){
+		String[] rootKeys = (String[]) getConfig().getKeys(false).toArray(new String[0]);
+		for (int i = 0;i < rootKeys.length;i++){
+			if (getConfig().getString(rootKeys[i] + ".name").equalsIgnoreCase(name)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }
