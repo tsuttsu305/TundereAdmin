@@ -60,6 +60,12 @@ public class SpawnerCmd {
 					getFlag().put(player, false);
 				}
 				
+				//すでにtrueの場合は処理しない。スケジュール量産防止
+				if (getFlag().get(player) == true){
+					player.sendMessage(ChatColor.RED + "[TundereAdmin] すでに登録可能状態です。スポナーを右クリックしてください。");
+					return;
+				}
+				
 				//30秒でフラグを戻す
 				getFlag().put(player, true);
 				player.sendMessage(ChatColor.GREEN + "[TundereAdmin] 30秒以内に登録するスポナーを素手で右クリックしてください");
@@ -69,7 +75,7 @@ public class SpawnerCmd {
 					public void run() {
 						if (getFlag().get((Player)sender) == true){
 							getFlag().put((Player)sender, false);
-							((Player)sender).sendMessage(ChatColor.DARK_GREEN + "[TundereAdmin] スポナー登録処理をキャンセルしました。");
+							((Player)sender).sendMessage(ChatColor.DARK_GREEN + "[TundereAdmin] スポナー登録処理がタイムアウトしました。");
 						}
 					}
 				}, 20L*30L);
