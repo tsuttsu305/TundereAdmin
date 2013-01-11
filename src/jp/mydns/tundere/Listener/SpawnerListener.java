@@ -9,8 +9,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 /**
  * 
@@ -72,11 +74,26 @@ public class SpawnerListener implements Listener{
 	
 	/**
 	 * Player Join Flag Reset 
-	 * @param event
+	 * @param PlayerJoinEvent
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event){
 		plugin.getspawnerFlagMap().put(event.getPlayer(), false);
+	}
+	
+	
+	/**
+	 * 
+	 * @param PlayerInteractEvent
+	 */
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerClick(PlayerInteractEvent event){
+		//右クリック以外は弾く
+		if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+		//スポナー以外は弾く
+		if (!(event.getClickedBlock().getType().getId() == Material.MOB_SPAWNER.getId())) return;
+		
+		
 	}
 	
 	
