@@ -34,7 +34,7 @@ public class SpawnerCmd {
 	
 	public void cmdRun(){
 		if (args.length < 1){
-			sender.sendMessage("[TundereAdmin] /spawner [ reg | flag | list ]");
+			sender.sendMessage("[TundereAdmin] /spawner [ reg | chk | flag | list ]");
 			return;
 		}
 		
