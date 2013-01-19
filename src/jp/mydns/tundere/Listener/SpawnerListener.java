@@ -2,6 +2,7 @@ package jp.mydns.tundere.Listener;
 
 import jp.mydns.tundere.TundereAdmin;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -79,6 +80,7 @@ public class SpawnerListener implements Listener{
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event){
 		plugin.getspawnerFlagMap().put(event.getPlayer(), false);
+		plugin.getSpawnerName().put(event.getPlayer(), "NoName");
 	}
 	
 	
@@ -88,11 +90,27 @@ public class SpawnerListener implements Listener{
 	 */
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerClick(PlayerInteractEvent event){
+		//登録処理判定
+		if (plugin.getspawnerFlagMap().get(event.getPlayer()) == false)return;
 		//右クリック以外は弾く
 		if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
 		//スポナー以外は弾く
 		if (!(event.getClickedBlock().getType().getId() == Material.MOB_SPAWNER.getId())) return;
 		
+		Block spawner = event.getClickedBlock();
+		int x = spawner.getLocation().getBlockX(), y = spawner.getLocation().getBlockY(), z = spawner.getLocation().getBlockZ();
+		String path =spawner.getLocation().getWorld().getName() + "." +  x + "," + y + "," + z;
+		
+		//すでに誰かに登録されていた場合
+		if (!getConfig().getString(path).equalsIgnoreCase("none")){
+			event.getPlayer().sendMessage(ChatColor.RED + "[TundereAdmin]すでに登録されています!");
+			return;
+		}
+		
+		//登録
+		getConfig().set(path + ".owner", event.getPlayer().getName());
+		getConfig().set(path + ".name", plugin.getSpawnerName().get(event.getPlayer()));
+		getConfig().set(path + ".stop", true);
 		
 	}
 	

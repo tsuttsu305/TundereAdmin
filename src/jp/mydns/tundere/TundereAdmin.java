@@ -30,6 +30,7 @@ public class TundereAdmin extends JavaPlugin {
 	private YAMLManager warpLoc, spawnerloc;
 	private HashMap<Player, Boolean> afkStatus = new HashMap<Player, Boolean>();
 	private HashMap<Player, Boolean> spawnerRegFlag = new HashMap<Player, Boolean>();
+	private HashMap<Player, String> spawnerName = new HashMap<Player, String>();
 	
 	
 	@Override
@@ -134,5 +135,9 @@ public class TundereAdmin extends JavaPlugin {
 			getAfkStatusMap().put(players[i], false);
 			getspawnerFlagMap().put(players[i], false);
 		}
+	}
+
+	public HashMap<Player, String> getSpawnerName() {
+		return spawnerName;
 	}
 }

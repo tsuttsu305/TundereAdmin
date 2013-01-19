@@ -68,6 +68,7 @@ public class SpawnerCmd {
 				
 				//30秒でフラグを戻す
 				getFlag().put(player, true);
+				plugin.getSpawnerName().put(player, pointName);
 				player.sendMessage(ChatColor.GREEN + "[TundereAdmin] 30秒以内に登録するスポナーを素手で右クリックしてください");
 				
 				
@@ -75,6 +76,7 @@ public class SpawnerCmd {
 					public void run() {
 						if (getFlag().get((Player)sender) == true){
 							getFlag().put((Player)sender, false);
+							plugin.getSpawnerName().put((Player)sender, "NoName");
 							((Player)sender).sendMessage(ChatColor.DARK_GREEN + "[TundereAdmin] スポナー登録処理がタイムアウトしました。");
 						}
 					}
